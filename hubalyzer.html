@@ -1,0 +1,127 @@
+<!doctype html>
+<title>Hubalyzer draws pretty things based on public GitHub profiles</title>
+<link rel='stylesheet' href='hubalyzer.css'>
+<header class='st-header'>
+  <a href='https://github.com/bevacqua/hubalyzer' class='hy-title' target='_blank'><h1>Hubalyzer</h1></a>
+  <h2 class='hy-caption'>A breeze of awesomeness in your browser</h2>
+  <p class='gh-quote'></p>
+</header>
+<form class='st-input'>
+  <input name='hubalyzer-username' class='hy-username' placeholder='your GitHub username' />
+  <button class='hy-button hy-hubalyze'>Hubalyze me please!</button>
+  <p class='ve-username'></p>
+</form>
+<section class='ve-xhr'>
+  <p class='ve-xhr-message'></p>
+  <a class='ve-xhr-documentation'></a>
+</section>
+<section class='st-output'>
+  <div class='oh-header'></div>
+  <div class='ot-sidebar'></div>
+  <div class='ot-main'>
+    <div class='ot-description'></div>
+    <div class='ot-repos'></div>
+    <div class='og-graphics'></div>
+  </div>
+  <button class='hy-again'>Try with a different user?</button>
+</section>
+<script src='http://d3js.org/d3.v3.min.js'></script>
+<script src='tmpl.js'></script>
+<script src='such.js'></script>
+<script src='hubalyzer.js'></script>
+<script type='text/template' id='oh_header'>
+  <div class="oh-avatar-container">
+    <img class="oh-avatar" alt="" src="{{=user.avatar_url}}">
+  </div>
+  <a class="oh-name" href="{{=user.html_url}}">
+    <h3 class="oh-name-heading">{{=user.name}}</h3>
+    <h5 class="oh-name-login">{{=user.login}}</h5>
+  </a>
+</script>
+<script type='text/template' id='ot_sidebar'>
+  <a class="ot-stat mt-followers" href="https://github.com/{{=user.login}}/followers">
+    <strong>{{=user.followers}}</strong><span class="ot-statname">followers gathered</span>
+  </a>
+  <a class="ot-stat mt-stars" href="https://github.com/{{=user.login}}?tab=repositories">
+    <strong>{{=stars}}</strong><span class="ot-statname">stars gazed</span>
+  </a>
+  <a class="ot-stat mt-forks" href="https://github.com/{{=user.login}}?tab=repositories">
+    <strong>{{=forks}}</strong><span class="ot-statname">forks acquired</span>
+  </a>
+  <a class="ot-stat ug-sources" href="https://github.com/{{=user.login}}?tab=repositories">
+    <strong>{{=created.length}}</strong><span class="ot-statname">open-sourced</span>
+  </a>
+  <a class="ot-stat ug-gists" href="https://gist.github.com/{{=user.login}}">
+    <strong>{{=user.public_gists}}</strong><span class="ot-statname">public gists</span>
+  </a>
+  <a class="ot-stat ug-forks" href="https://github.com/{{=user.login}}?tab=repositories">
+    <strong>{{=forked.length}}</strong><span class="ot-statname">forks given</span>
+  </a>
+  <a class="ot-stat ug-following" href="https://github.com/{{=user.login}}/following">
+    <strong>{{=user.following}}</strong><span class="ot-statname">stalking</span>
+  </a>
+</script>
+<script type='text/template' id='ot_description'>
+  <p>some data</p>
+  <p>some data</p>
+  <p>some data</p>
+  <p>some data</p>
+  <p>some data</p>
+  <p>some data</p>
+  <p>some data</p>
+  <p>some data</p>
+  <p>some data</p>
+  <p>some data</p>
+</script>
+<script type='text/template' id='ot_repos'>
+  <p class="ot-heading">Most Starred</p>
+  <ol class="ot-list">
+  {{ for (var i = 0; i < most.starred.length; i++) { }}
+    <li class="ot-repo ot-most-starred">
+      <span class="ot-repo-icon octicon octicon-repo"></span>
+      <div class="ot-repo-info">
+        <a class="repo-name" href="{{=most.starred[i].html_url}}">{{=most.starred[i].name}}</a>
+        <span class="repo-description ot-truncate">{{=most.starred[i].description}}</span>
+      </div>
+      <div class="ot-stars-and-forks">
+        <div class="ot-stars">
+          <span>{{=most.starred[i].stargazers_count}}</span>
+          <span class="octicon octicon-star"></span>
+        </div>
+        <div class="ot-forks">
+          <span>{{=most.starred[i].forks_count}}</span>
+          <span class="octicon octicon-git-branch"></span>
+        </div>
+      </div>
+    </li>
+  {{ } }}
+  {{ if (most.starred.length === 0) { }}
+    <li class="ot-repo ot-repo-none">meh, none!</li>
+  {{ } }}
+  </ol>
+  <p class="ot-heading ot-heading-forks">Most Forked</p>
+  <ol class="ot-list ot-most-forked">
+  {{ for (var i = 0; i < most.forked.length; i++) { }}
+    <li class="ot-repo">
+      <span class="ot-repo-icon octicon octicon-repo"></span>
+      <div class="ot-repo-info">
+        <a class="repo-name" href="{{=most.forked[i].html_url}}">{{=most.forked[i].name}}</a>
+        <span class="repo-description ot-truncate">{{=most.forked[i].description}}</span>
+      </div>
+      <div class="ot-stars-and-forks">
+        <div class="ot-stars">
+          <span>{{=most.forked[i].stargazers_count}}</span>
+          <span class="octicon octicon-star"></span>
+        </div>
+        <div class="ot-forks">
+          <span>{{=most.forked[i].forks_count}}</span>
+          <span class="octicon octicon-git-branch"></span>
+        </div>
+      </div>
+    </li>
+  {{ } }}
+  {{ if (most.forked.length === 0) { }}
+    <li class="ot-repo ot-repo-none">meh, none!</li>
+  {{ } }}
+  </ol>
+</script>
