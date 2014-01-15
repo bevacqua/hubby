@@ -54,7 +54,7 @@
       var results = a ? [] : {};
       keys.forEach(function (key, i) {
         var k = a ? i : key;
-        tasks[k](next(k));
+        setTimeout(tasks[k](next(k)), 0);
       });
 
       function next (k) {
@@ -92,7 +92,7 @@
     Object.keys(options.headers || {}).forEach(function (key) {
       xhr.setRequestHeader(key, options.headers[key]);
     });
-    xhr.send();
+    xhr.send(data());
 
     function compose (url) {
       if (method !== 'GET' || !options.data) {
@@ -109,6 +109,14 @@
       return url + connector + params;
     }
 
+    function data () {
+      if (method !== 'GET' && options.data) {
+        var form = new FormData();
+        Object.keys(options.data).forEach(function (key) {
+          form.append(key, JSON.stringify(options.data));
+        });
+      }
+    }
     function xhrWrap () { return { headers: getHeaders(), original: xhr }; }
 
     function getHeaders () {
