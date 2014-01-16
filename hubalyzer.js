@@ -53,15 +53,20 @@
 
   function fetch (username) {
     $.async.parallel({
-      user: getUser, repos: getRepos
+      user: getUser, repos: getRepos, events: getEvents
     }, processing);
 
-    function getUser (done) {
-      var endpoint = $.format('https://api.github.com/users/%s', username);
+    function query (endpoint, done) {
+      var base = 'https://api.github.com';
+      var url = endpoint.indexOf(base) === 0 ? endpoint : base + endpoint;
 
-      $.get(endpoint, { headers: { Accept: 'application/vnd.github.v3+json' } }, wrap(function (res) {
+      $.get(url, { headers: { Accept: 'application/vnd.github.v3+json' } }, wrap(done));
+    }
+
+    function getUser (done) {
+      query($.format('/users/%s', username), function (res) {
         done(null, res);
-      }));
+      });
     }
 
     function getRepos (done) {
@@ -70,9 +75,9 @@
       moreRepos();
 
       function moreRepos (url) {
-        var endpoint = url || $.format('https://api.github.com/users/%s/repos', username);
+        var endpoint = url || $.format('/users/%s/repos', username);
 
-        $.get(endpoint, { headers: { Accept: 'application/vnd.github.v3+json' } }, wrap(function (res, status, xhr) {
+        query(endpoint, function (res, status, xhr) {
           repos.push.apply(repos, res);
 
           if (xhr.headers.Link && xhr.headers.Link.next) {
@@ -80,8 +85,14 @@
           } else {
             done(null, repos);
           }
-        }));
+        });
       }
+    }
+
+    function getEvents (done) {
+      query($.format('/users/%s/events', username), function (res) {
+        done(null, res);
+      });
     }
   }
 
