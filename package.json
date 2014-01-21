@@ -1,0 +1,22 @@
+{
+  "name": "hubalyzer",
+  "description": "Hubalyzer draws pretty things based on public GitHub profiles",
+  "homepage": "https://github.com/bevacqua/hubalyzer",
+  "author": {
+    "name": "Nicolas Bevacqua",
+    "email": "ng@bevacqua.io",
+    "url": "http://bevacqua.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bevacqua/hubalyzer.git"
+  },
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "server": "static -p 3000"
+  },
+  "dependencies": {
+    "node-static": "~0.7.3"
+  }
+}
