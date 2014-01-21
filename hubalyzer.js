@@ -117,12 +117,26 @@
       forked: data.repos.filter(forked).sort(forksort).slice(0, 5)
     };
     data.lang = getLanguages(data);
+    data.stars = ks(data.stars);
     reveal(data);
 
     function starred (r) { return r[s]; }
     function starsort (a, b) { return b[s] - a[s]; }
     function forked (r) { return r[f]; }
     function forksort (a, b) { return b[f] - a[f]; }
+  }
+
+  function ks (v) {
+    var notation = '';
+    while (v > 1000) {
+      v /= 1000;
+      if (notation === 'k') {
+        notation = 'm';
+      } else if (!notation) {
+        notation = 'k';
+      }
+    }
+    return v + notation;
   }
 
   function getLanguages (data) {
