@@ -39,26 +39,26 @@
   </a>
 </script>
 <script type='text/template' id='ot_sidebar'>
-  <a class="ot-stat mt-followers" href="https://github.com/{{=user.login}}/followers">
-    <strong>{{=user.followers}}</strong><span class="ot-statname">followers gathered</span>
+  <a class="ot-stat mt-followers" href="https://github.com/{{=user.login}}/followers" title="{{=user.followers}} followers">
+    <strong>{{=kfollowers}}</strong><span class="ot-statname">followers gathered</span>
   </a>
-  <a class="ot-stat mt-stars" href="https://github.com/{{=user.login}}?tab=repositories">
-    <strong>{{=stars}}</strong><span class="ot-statname">stars gazed</span>
+  <a class="ot-stat mt-stars" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=stars}} stars">
+    <strong>{{=kstars}}</strong><span class="ot-statname">stars gazed</span>
   </a>
-  <a class="ot-stat mt-forks" href="https://github.com/{{=user.login}}?tab=repositories">
-    <strong>{{=forks}}</strong><span class="ot-statname">forks given</span>
+  <a class="ot-stat mt-forks" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=forks}} forks">
+    <strong>{{=kforks}}</strong><span class="ot-statname">forks given</span>
   </a>
-  <a class="ot-stat ug-sources" href="https://github.com/{{=user.login}}?tab=repositories">
-    <strong>{{=created.length}}</strong><span class="ot-statname">open-sourced</span>
+  <a class="ot-stat ug-sources" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=tcreated}} repos">
+    <strong>{{=kcreated}}</strong><span class="ot-statname">open-sourced</span>
   </a>
-  <a class="ot-stat ug-gists" href="https://gist.github.com/{{=user.login}}">
-    <strong>{{=user.public_gists}}</strong><span class="ot-statname">public gists</span>
+  <a class="ot-stat ug-gists" href="https://gist.github.com/{{=user.login}}" title="{{=user.public_gists}} gists">
+    <strong>{{=kgists}}</strong><span class="ot-statname">public gists</span>
   </a>
-  <a class="ot-stat ug-forks" href="https://github.com/{{=user.login}}?tab=repositories">
-    <strong>{{=forked.length}}</strong><span class="ot-statname">forks created</span>
+  <a class="ot-stat ug-forks" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=forked.length}} forks">
+    <strong>{{=kforked}}</strong><span class="ot-statname">forks created</span>
   </a>
-  <a class="ot-stat ug-following" href="https://github.com/{{=user.login}}/following">
-    <strong>{{=user.following}}</strong><span class="ot-statname">stalking</span>
+  <a class="ot-stat ug-following" href="https://github.com/{{=user.login}}/following" title="{{=user.following}} people">
+    <strong>{{=kfollowing}}</strong><span class="ot-statname">stalking</span>
   </a>
 </script>
 <script type='text/template' id='ot_description'>

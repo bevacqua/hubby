@@ -117,7 +117,15 @@
       forked: data.repos.filter(forked).sort(forksort).slice(0, 5)
     };
     data.lang = getLanguages(data);
-    data.stars = ks(data.stars);
+    data.kstars = ks(data.stars);
+    data.kforks = ks(data.forks);
+    data.kfollowers = ks(data.user.followers);
+    data.tcreated = data.created.length;
+    data.kcreated = ks(data.tcreated);
+    data.kgists = ks(data.user.public_gists);
+    data.kforked = ks(data.forked.length);
+    data.kfollowing = ks(data.user.following);
+
     reveal(data);
 
     function starred (r) { return r[s]; }
@@ -136,7 +144,7 @@
         notation = 'k';
       }
     }
-    return v + notation;
+    return +v.toFixed(1) + notation;
   }
 
   function getLanguages (data) {
