@@ -139,7 +139,7 @@
     while (v > 1000) {
       v /= 1000;
       if (notation === 'k') {
-        notation = 'm';
+        notation = 'm'; break;
       } else if (!notation) {
         notation = 'k';
       }
