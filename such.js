@@ -19,6 +19,7 @@
     Node.prototype.on = Node.prototype.addEventListener;
     Node.prototype.remove = function () { this.parentNode.removeChild(this); };
     Node.prototype.txt = function (v) { if (v === void 0) { return this.innerText; } this.innerText = v; }
+    Node.prototype.val = function (v) { if (v === void 0) { return this.value; } this.value = v; }
     Node.prototype.html = function (v) { if (v === void 0) { return this.innerHTML; } this.innerHTML = v; }
     Node.prototype.attr = function (n, v) { if (v === void 0) { return this.getAttribute(n); } this.setAttribute(n, v); }
 }(suchjs, Node);

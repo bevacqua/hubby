@@ -7,7 +7,7 @@
   <p class='gh-quote'></p>
 </header>
 <form class='st-input'>
-  <input name='hubalyzer-username' class='hy-username' placeholder='your GitHub username' />
+  <input name='hubalyzer-username' class='hy-username' placeholder='GitHub username' />
   <button class='hy-button hy-hubalyze'>Hubalyze me please!</button>
   <p class='ve-username'></p>
 </form>
@@ -19,8 +19,8 @@
   <div class='oh-header'></div>
   <div class='ot-sidebar'></div>
   <div class='ot-main'>
-    <div class='ot-description'></div>
     <div class='ot-repos'></div>
+    <div class='ot-description'></div>
     <div class='og-graphics'></div>
   </div>
   <button class='hy-again'>Try with a different user?</button>
@@ -74,54 +74,58 @@
   <p>some data</p>
 </script>
 <script type='text/template' id='ot_repos'>
-  <p class="ot-heading">Most Starred</p>
-  <ol class="ot-list">
-  {{ for (var i = 0; i < most.starred.length; i++) { }}
-    <li class="ot-repo ot-most-starred">
-      <span class="ot-repo-icon octicon octicon-repo"></span>
-      <div class="ot-repo-info">
-        <a class="repo-name" href="{{=most.starred[i].html_url}}">{{=most.starred[i].name}}</a>
-        <span class="repo-description ot-truncate">{{=most.starred[i].description}}</span>
-      </div>
-      <div class="ot-stars-and-forks">
-        <div class="ot-stars">
-          <span>{{=most.starred[i].stargazers_count}}</span>
-          <span class="octicon octicon-star"></span>
+  <div class="ot-repos-section">
+    <p class="ot-heading">Most Starred</p>
+    <ol class="ot-list">
+    {{ for (var i = 0; i < most.starred.length; i++) { }}
+      <li class="ot-repo ot-most-starred">
+        <span class="ot-repo-icon octicon octicon-repo"></span>
+        <div class="ot-repo-info">
+          <a class="repo-name" href="{{=most.starred[i].html_url}}">{{=most.starred[i].name}}</a>
+          <span class="repo-description ot-truncate">{{=most.starred[i].description}}</span>
         </div>
-        <div class="ot-forks">
-          <span>{{=most.starred[i].forks_count}}</span>
-          <span class="octicon octicon-git-branch"></span>
+        <div class="ot-stars-and-forks">
+          <div class="ot-stars">
+            <span>{{=most.starred[i].stargazers_count}}</span>
+            <span class="octicon octicon-star"></span>
+          </div>
+          <div class="ot-forks">
+            <span>{{=most.starred[i].forks_count}}</span>
+            <span class="octicon octicon-git-branch"></span>
+          </div>
         </div>
-      </div>
-    </li>
-  {{ } }}
-  {{ if (most.starred.length === 0) { }}
-    <li class="ot-repo ot-repo-none">meh, none!</li>
-  {{ } }}
-  </ol>
-  <p class="ot-heading ot-heading-forks">Most Forked</p>
-  <ol class="ot-list ot-most-forked">
-  {{ for (var i = 0; i < most.forked.length; i++) { }}
-    <li class="ot-repo">
-      <span class="ot-repo-icon octicon octicon-repo"></span>
-      <div class="ot-repo-info">
-        <a class="repo-name" href="{{=most.forked[i].html_url}}">{{=most.forked[i].name}}</a>
-        <span class="repo-description ot-truncate">{{=most.forked[i].description}}</span>
-      </div>
-      <div class="ot-stars-and-forks">
-        <div class="ot-stars">
-          <span>{{=most.forked[i].stargazers_count}}</span>
-          <span class="octicon octicon-star"></span>
+      </li>
+    {{ } }}
+    {{ if (most.starred.length === 0) { }}
+      <li class="ot-repo ot-repo-none">meh, none!</li>
+    {{ } }}
+    </ol>
+  </div>
+  <div class="ot-repos-section">
+    <p class="ot-heading ot-heading-forks">Most Forked</p>
+    <ol class="ot-list ot-most-forked">
+    {{ for (var i = 0; i < most.forked.length; i++) { }}
+      <li class="ot-repo">
+        <span class="ot-repo-icon octicon octicon-repo"></span>
+        <div class="ot-repo-info">
+          <a class="repo-name" href="{{=most.forked[i].html_url}}">{{=most.forked[i].name}}</a>
+          <span class="repo-description ot-truncate">{{=most.forked[i].description}}</span>
         </div>
-        <div class="ot-forks">
-          <span>{{=most.forked[i].forks_count}}</span>
-          <span class="octicon octicon-git-branch"></span>
+        <div class="ot-stars-and-forks">
+          <div class="ot-stars">
+            <span>{{=most.forked[i].stargazers_count}}</span>
+            <span class="octicon octicon-star"></span>
+          </div>
+          <div class="ot-forks">
+            <span>{{=most.forked[i].forks_count}}</span>
+            <span class="octicon octicon-git-branch"></span>
+          </div>
         </div>
-      </div>
-    </li>
-  {{ } }}
-  {{ if (most.forked.length === 0) { }}
-    <li class="ot-repo ot-repo-none">meh, none!</li>
-  {{ } }}
-  </ol>
+      </li>
+    {{ } }}
+    {{ if (most.forked.length === 0) { }}
+      <li class="ot-repo ot-repo-none">meh, none!</li>
+    {{ } }}
+    </ol>
+  </div>
 </script>

@@ -7,12 +7,13 @@
   $('.hy-hubalyze').on('click', validate);
   $('.hy-again').on('click', again);
 
+  username.val(localStorage.getItem('last.username'));
   username.focus();
 
   function validate (e) {
     e.preventDefault();
 
-    var input = username.value;
+    var input = username.val();
     if (input.match(validation)) {
       usernameVal.classList.remove('ve-show');
       fetch(input);
@@ -52,6 +53,13 @@
   }
 
   function fetch (username) {
+    var cacheJson = localStorage.getItem('data.' + username) || '{"generated":false}';
+    var cache = JSON.parse(cacheJson);
+    if (cache.generated && new Date() - cache.generated < 6000000) {
+      reveal(cache); // fresh for 10m TODO remove a 0
+      return;
+    }
+
     $.async.parallel({
       user: getUser, repos: getRepos, events: getEvents
     }, processing);
@@ -125,6 +133,10 @@
     data.kgists = ks(data.user.public_gists);
     data.kforked = ks(data.forked.length);
     data.kfollowing = ks(data.user.following);
+    data.generated = +new Date();
+
+    localStorage.setItem('data.' + data.user.login, JSON.stringify(data));
+    localStorage.setItem('last.username', data.user.login);
 
     reveal(data);
 
@@ -150,7 +162,7 @@
   function getLanguages (data) {
     var result = {};
     data.repos.forEach(function (repo) {
-      var lang = repo.language || 'Other';
+      var lang = repo.language || 'mystery';
       if (!result[lang]) {
         result[lang] = { c: 0, s: 0 };
       }
@@ -175,7 +187,7 @@
     if (ratio < 12) { return 'superman. He\'s a happy'; }
     if (ratio < 15) { return 'wonderwoman. She\'s a quality'; }
     if (ratio < 18) { return 'an amazing'; }
-    if (ratio < 21) { return 'such a doge. He\'s a successful'; }
+    if (ratio < 21) { return 'such a doge. Very'; }
     if (ratio < 26) { return 'a prolific'; }
     if (ratio < 46) { return 'a generous'; }
     if (ratio < 72) { return 'a passionate'; }
@@ -253,7 +265,7 @@
     var repos = {};
     data.repos.forEach(function (repo) {
       if (!repo.language) {
-        repo.language = 'Other';
+        repo.language = 'mystery';
       }
       if (!repos[repo.language]) {
         repos[repo.language] = [repo];
@@ -265,7 +277,9 @@
   }
 
   function reveal (data) {
-    console.info('data accessible in window.data');
+    console.info('We got a hacker over here!');
+    console.table(data.most.starred, 'name homepage stargazers_count forks_count open_issues'.split(' '));
+    console.info('You can play with the data, it\'s accessible in window.data');
     console.info(data);
     window.data = data;
     $('.oh-header').html(tmpl('oh_header', data));
@@ -277,11 +291,12 @@
 
   function again () {
     document.body.classList.remove('hy-reveal');
-    username.value = '';
+    username.val('');
     username.focus();
   }
 
   // $.get('https://api.github.com/zen', { responseType: 'text', headers: { Accept: 'application/vnd.github.v3+json' } }, wrap(function (res) {
   //   $('.gh-quote').txt(res);
   // }));
+  $('.gh-quote').txt('Keep it logically awesome.');
 }(suchjs);
