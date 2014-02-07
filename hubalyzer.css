@@ -1,6 +1,6 @@
 * { margin: 0; padding: 0; outline: 0; border: none; box-sizing: border-box; }
 button { cursor: pointer; }
-body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px; }
+body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px; overflow-x: hidden; }
 @font-face { font-family: 'octicons'; src: url('octicons.woff') format('woff'); }
 .octicon { font: normal normal 16px octicons; line-height: 1; display: inline-block; text-decoration: none; -webkit-font-smoothing: antialiased; }
 .octicon-repo:before { content: '\f001'; }
@@ -42,30 +42,33 @@ body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px
 .ot-main { margin-top: 30px; }
 .ot-heading { margin-bottom: 20px; color: #222; font-weight: bold; font-size: 28px; }
 .ot-list { list-style: none; }
-.ot-repos { text-align: center; overflow: hidden; }
-.ot-repos-section { display: inline-block; vertical-align: top; margin-right: 40px; width: 265px; }
+.ot-repos-section { display: inline-block; vertical-align: top; margin-right: 40px; width: 300px; }
 .ot-repo { margin-bottom: 8px; }
 .ot-repo-none { color: #c42525; font-style: italic; font-size: 14px; }
 .ot-repo-icon { vertical-align: top;  margin-right: 4px; }
 .ot-repo-info { display: inline-block; text-align: left }
-.repo-name { font-weight: bold; color: #4183c4; text-decoration: none; display: inline-block; }
+.repo-name { font-weight: bold; color: #4183c4; text-decoration: none; }
 .repo-name:hover { text-decoration: underline; }
-.repo-description { display: block; width: 200px; color: #aaa; font-size: 13px; }
+.repo-description { display: block; width: 180px; color: #aaa; font-size: 13px; }
 .ot-truncate { overflow: hidden; text-overflow: ellipsis; vertical-align: top; white-space: nowrap; }
-.ot-stars-and-forks { display: inline-block; vertical-align: top; margin-left: 4px; text-align: right; width: 35px; }
+.ot-stars-and-forks { display: inline-block; vertical-align: top; margin-left: 4px; text-align: right; width: 60px; }
 .ot-stars { margin-bottom: 3px; }
 .ot-stars, .ot-forks { font-size: 16px; }
 .ot-most-starred .ot-forks, .ot-most-forked .ot-stars { font-size: 12px; color: #ddd; }
+.ot-description { margin-top: 20px; }
+.ot-description-summary { font-style: italic; margin-bottom: 20px }
 
 @media only screen and (min-width: 1024px) {
+  body { max-width: 1015px; margin: 0 auto; }
   .ot-main { margin-top: 8px; }
-  .hy-caption { text-align: left; }
   .oh-avatar-container { width: 110px; display: inline-block; float: inherit; }
   .oh-name, .oh-name-heading { display: inline-block; }
-  .ot-repos { float: right; width: 305px; }
+  .ot-repos { text-align: center; float: right; width: 305px; }
   .ot-heading-forks { margin-top: 40px; }
   .ot-sidebar { display: inline-block; margin-right: -100px; width: 95px; }
   .ot-stat { display: block; width: 95px; }
   .ot-main { display: inline-block; margin-left: 110px; }
-  .ot-description, .ot-graphics { margin-right: 315px; }
+  .ot-description { margin-top: inherit; }
+  .ot-description, .ot-graphics { margin-right: 315px; max-width: 700px; }
+  .repo-description { width: 200px; }
 }

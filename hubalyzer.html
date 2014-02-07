@@ -13,7 +13,7 @@
 </form>
 <section class='ve-xhr'>
   <p class='ve-xhr-message'></p>
-  <a class='ve-xhr-documentation'></a>
+  <a class='ve-xhr-documentation' target='_blank'></a>
 </section>
 <section class='st-output'>
   <div class='oh-header'></div>
@@ -33,37 +33,37 @@
   <div class="oh-avatar-container">
     <img class="oh-avatar" alt="" src="{{=user.avatar_url}}">
   </div>
-  <a class="oh-name" href="{{=user.html_url}}">
+  <a class="oh-name" href="{{=user.html_url}}" target="_blank">
     <h3 class="oh-name-heading">{{=user.name}}</h3>
     <h5 class="oh-name-login">{{=user.login}}</h5>
   </a>
 </script>
 <script type='text/template' id='ot_sidebar'>
-  <a class="ot-stat mt-followers" href="https://github.com/{{=user.login}}/followers" title="{{=user.followers}} followers">
+  <a target="_blank" class="ot-stat mt-followers" href="https://github.com/{{=user.login}}/followers" title="{{=user.followers}} followers">
     <strong>{{=kfollowers}}</strong><span class="ot-statname">followers gathered</span>
   </a>
-  <a class="ot-stat mt-stars" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=stars}} stars">
+  <a target="_blank" class="ot-stat mt-stars" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=stars}} stars">
     <strong>{{=kstars}}</strong><span class="ot-statname">stars gazed</span>
   </a>
-  <a class="ot-stat mt-forks" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=forks}} forks">
+  <a target="_blank" class="ot-stat mt-forks" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=forks}} forks">
     <strong>{{=kforks}}</strong><span class="ot-statname">forks given</span>
   </a>
-  <a class="ot-stat ug-sources" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=tcreated}} repos">
+  <a target="_blank" class="ot-stat ug-sources" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=tcreated}} repos">
     <strong>{{=kcreated}}</strong><span class="ot-statname">open-sourced</span>
   </a>
-  <a class="ot-stat ug-gists" href="https://gist.github.com/{{=user.login}}" title="{{=user.public_gists}} gists">
+  <a target="_blank" class="ot-stat ug-gists" href="https://gist.github.com/{{=user.login}}" title="{{=user.public_gists}} gists">
     <strong>{{=kgists}}</strong><span class="ot-statname">public gists</span>
   </a>
-  <a class="ot-stat ug-forks" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=forked.length}} forks">
+  <a target="_blank" class="ot-stat ug-forks" href="https://github.com/{{=user.login}}?tab=repositories" title="{{=forked.length}} forks">
     <strong>{{=kforked}}</strong><span class="ot-statname">forks created</span>
   </a>
-  <a class="ot-stat ug-following" href="https://github.com/{{=user.login}}/following" title="{{=user.following}} people">
+  <a target="_blank" class="ot-stat ug-following" href="https://github.com/{{=user.login}}/following" title="{{=user.following}} people">
     <strong>{{=kfollowing}}</strong><span class="ot-statname">stalking</span>
   </a>
 </script>
 <script type='text/template' id='ot_description'>
-  <p>Judging from his public GitHub presence, {{= user.name.split(' ')[0] }} is {{= lang[0].title }} {{= lang[0].language }} {{= lang[0].rank }}, and has {{= lang[0].prefix }} {{= lang[0].count }} repositories under his belt. {{= user.name.split(' ')[0] }} is also {{= lang[1].title }} {{= lang[1].language }} {{= lang[1].rank }}.</p>
-  <p>some data</p>
+  <p class="ot-description-summary">Judging from his public GitHub presence, {{= user.name.split(' ')[0] }} is {{= lang[0].title }} {{= lang[0].language }} {{= lang[0].rank }}, and has {{= lang[0].prefix }} {{= lang[0].count }} repositories under his belt. {{= user.name.split(' ')[0] }} is also {{= lang[1].title }} {{= lang[1].language }} {{= lang[1].rank }}.</p>
+  <p>The best thing they have to offer is <a class="repo-name" href="{{= data.most.starred[0].html_url }}" title="Check it out on GitHub" target="_blank">{{= data.most.starred[0].name }}</a>, a {{= data.most.starred[0].language || 'mystery' }} repo with {{= api.getPrefix(data.most.starred[0].stargazers_count, 'stars') }} {{= api.ks(data.most.starred[0].stargazers_count) }} stargazers, and {{= api.getPrefix(data.most.starred[0].forks_count, 'forks') }} {{= api.ks(data.most.starred[0].forks_count) }} forks to its name. Close behind is  <a class="repo-name" href="{{= data.most.starred[1].html_url }}" title="Check it out on GitHub" target="_blank">{{= data.most.starred[1].name }}</a>, a {{= data.most.starred[1].language || 'mystery' }} repo that has {{= api.getPrefix(data.most.starred[1].stargazers_count, 'stars') }} {{= api.ks(data.most.starred[1].stargazers_count) }} stargazers, and {{= api.getPrefix(data.most.starred[1].forks_count, 'forks') }} {{= api.ks(data.most.starred[1].forks_count) }} forks. Rounding off the top three, they have <a class="repo-name" href="{{= data.most.starred[2].html_url }}" title="Check it out on GitHub" target="_blank">{{= data.most.starred[2].name }}</a>, a {{= data.most.starred[2].language || 'mystery' }} repo with {{= api.getPrefix(data.most.starred[2].stargazers_count, 'stars') }} {{= api.ks(data.most.starred[2].stargazers_count) }} stargazers, and {{= api.getPrefix(data.most.starred[2].forks_count, 'forks') }} {{= api.ks(data.most.starred[2].forks_count) }} forks.</p>
   <p>some data</p>
   <p>some data</p>
   <p>some data</p>
@@ -81,16 +81,16 @@
       <li class="ot-repo ot-most-starred">
         <span class="ot-repo-icon octicon octicon-repo"></span>
         <div class="ot-repo-info">
-          <a class="repo-name" href="{{=most.starred[i].html_url}}">{{=most.starred[i].name}}</a>
-          <span class="repo-description ot-truncate">{{=most.starred[i].description}}</span>
+          <a class="repo-name" href="{{= most.starred[i].html_url }}" target="_blank">{{= most.starred[i].name }}</a>
+          <span class="repo-description ot-truncate">{{= most.starred[i].description }}</span>
         </div>
         <div class="ot-stars-and-forks">
           <div class="ot-stars">
-            <span>{{=most.starred[i].stargazers_count}}</span>
+            <span>{{= api.ks(most.starred[i].stargazers_count )}}</span>
             <span class="octicon octicon-star"></span>
           </div>
           <div class="ot-forks">
-            <span>{{=most.starred[i].forks_count}}</span>
+            <span>{{= api.ks(most.starred[i].forks_count) }}</span>
             <span class="octicon octicon-git-branch"></span>
           </div>
         </div>
@@ -108,16 +108,16 @@
       <li class="ot-repo">
         <span class="ot-repo-icon octicon octicon-repo"></span>
         <div class="ot-repo-info">
-          <a class="repo-name" href="{{=most.forked[i].html_url}}">{{=most.forked[i].name}}</a>
-          <span class="repo-description ot-truncate">{{=most.forked[i].description}}</span>
+          <a class="repo-name" href="{{=most.forked[i].html_url}}" target="_blank">{{= most.forked[i].name }}</a>
+          <span class="repo-description ot-truncate">{{= most.forked[i].description }}</span>
         </div>
         <div class="ot-stars-and-forks">
           <div class="ot-stars">
-            <span>{{=most.forked[i].stargazers_count}}</span>
+            <span>{{= api.ks(most.forked[i].stargazers_count) }}</span>
             <span class="octicon octicon-star"></span>
           </div>
           <div class="ot-forks">
-            <span>{{=most.forked[i].forks_count}}</span>
+            <span>{{= api.ks(most.forked[i].forks_count) }}</span>
             <span class="octicon octicon-git-branch"></span>
           </div>
         </div>

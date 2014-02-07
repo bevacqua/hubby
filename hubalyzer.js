@@ -1,5 +1,4 @@
-!function ($) {
-
+!function ($, root) {
   var username = $('.hy-username');
   var usernameVal = $('.ve-username');
   var validation = /[a-z0-9_-]+/i;
@@ -7,8 +6,10 @@
   $('.hy-hubalyze').on('click', validate);
   $('.hy-again').on('click', again);
 
-  username.val(localStorage.getItem('last.username'));
-  username.focus();
+  if (!username.val()) {
+    username.val(localStorage.getItem('last.username'));
+    username.focus();
+  }
 
   function validate (e) {
     e.preventDefault();
@@ -77,30 +78,28 @@
       });
     }
 
-    function getRepos (done) {
-      var repos = [];
-
-      moreRepos();
-
-      function moreRepos (url) {
-        var endpoint = url || $.format('/users/%s/repos', username);
-
-        query(endpoint, function (res, status, xhr) {
-          repos.push.apply(repos, res);
-
-          if (xhr.headers.Link && xhr.headers.Link.next) {
-            moreRepos(xhr.headers.Link.next);
+    function getSomePages (endpoint, pages, done) {
+      var partial = [], page = 0;
+      morePages();
+      function morePages (url) {
+        var resource = url || endpoint;
+        query(resource, function (res, status, xhr) {
+          partial.push.apply(partial, res);
+          if (page++ < pages && xhr.headers.Link && xhr.headers.Link.next) {
+            morePages(xhr.headers.Link.next);
           } else {
-            done(null, repos);
+            done(null, partial);
           }
         });
       }
     }
 
+    function getRepos (done) {
+      getSomePages($.format('/users/%s/repos', username), 10, done);
+    }
+
     function getEvents (done) {
-      query($.format('/users/%s/events', username), function (res) {
-        done(null, res);
-      });
+      getSomePages($.format('/users/%s/events', username), 10, done);
     }
   }
 
@@ -109,6 +108,7 @@
     var s = 'stargazers_count';
     var f = 'forks_count';
 
+    data.events = input.events;
     data.user = input.user;
     data.repos = input.repos || [];
     data.repos.forEach(function (repo) {
@@ -173,92 +173,120 @@
       return result[b].c - result[a].c;
     }).map(function (k) {
       var d = result[k], c = d.c, s = d.s, r = d.s / d.c;
-      return { language: k, ratio: r, count: c, rank: getRank(c, s), title: getTitle(r), prefix: getPrefix(c, s), stars: s };
+      return { language: k, ratio: r, count: c, rank: getRank(c), title: getTitle(r), prefix: getRepoPrefix(c), stars: s };
     });
   }
 
-  function getTitle (ratio) {
-    if (ratio < 2) { return 'a'; }
-    if (ratio < 3) { return 'alive. He writes anecdotal'; }
-    if (ratio < 4) { return 'a quiet'; }
-    if (ratio < 5) { return 'a learning'; }
-    if (ratio < 6) { return 'a reasonable'; }
-    if (ratio < 8) { return 'a self-starting'; }
-    if (ratio < 12) { return 'superman. He\'s a happy'; }
-    if (ratio < 15) { return 'wonderwoman. She\'s a quality'; }
-    if (ratio < 18) { return 'an amazing'; }
-    if (ratio < 21) { return 'such a doge. Very'; }
-    if (ratio < 26) { return 'a prolific'; }
-    if (ratio < 46) { return 'a generous'; }
-    if (ratio < 72) { return 'a passionate'; }
-    if (ratio < 85) { return 'a loving'; }
-    if (ratio < 99) { return 'a charitable'; }
-    if (ratio < 140) { return 'a veritable'; }
-    if (ratio < 184) { return 'a unselfish'; }
-    if (ratio < 238) { return 'a magnanimous'; }
-    if (ratio < 287) { return 'a kindhearted'; }
-    if (ratio < 325) { return 'a thoughtful'; }
-    if (ratio < 419) { return 'a altruistic'; }
-    if (ratio < 465) { return 'a hospitable'; }
-    if (ratio < 490) { return 'a more than generous'; }
-    return 'out of this world. He\'s a terrific';
+  function getPhrase (factor, things, defaultPhrase) {
+    for (var key in things) {
+      if (factor < parseInt(key, 10)) {
+        return things[key];
+      }
+    }
+    return defaultPhrase;
   }
 
-  function getRank (count, stars) {
-    if (count < 2) { return 'neophyte'; }
-    if (count < 3) { return 'explorer'; }
-    if (count < 5) { return 'developer'; }
-    if (count < 8) { return 'practitioner'; }
-    if (count < 11) { return 'sailor'; }
-    if (count < 14) { return 'adept'; }
-    if (count < 17) { return 'adventurer'; }
-    if (count < 24) { return 'aficionado'; }
-    if (count < 28) { return 'warrior'; }
-    if (count < 31) { return 'expert'; }
-    if (count < 34) { return 'legend'; }
-    if (count < 37) { return 'doge'; }
-    if (count < 40) { return 'master'; }
-    if (count < 43) { return 'elder'; }
-    if (count < 47) { return 'ninja'; }
-    if (count < 53) { return 'soldier'; }
-    if (count < 60) { return 'samurai'; }
-    if (count < 65) { return 'extraordinaire'; }
-    if (count < 71) { return 'flipboarder'; }
-    if (count < 76) { return 'extremist'; }
-    if (count < 82) { return 'heavyweight'; }
-    if (count < 88) { return 'champion'; }
-    if (count < 95) { return 'globetrotter'; }
-    if (count < 102) { return 'grandmaster'; }
-    if (count < 110) { return 'machine'; }
-    if (count < 119) { return 'legend'; }
-    if (count < 131) { return 'supercomputer'; }
-    if (count < 147) { return 'martian'; }
-    if (count < 162) { return 'hotshot'; }
-    if (count < 175) { return 'blackbelt'; }
-    if (count < 187) { return 'octocat'; }
-    if (count < 200) { return 'superstar'; }
-    return 'god';
+  function getTitle (factor) {
+    var titles = {
+      2: 'a',
+      3: 'alive. He writes anecdotal',
+      4: 'a quiet',
+      5: 'a learning',
+      6: 'a reasonable',
+      8: 'a self-starting',
+      12: 'superman. He\'s a happy',
+      15: 'wonderwoman. She\'s a quality',
+      18: 'an amazing',
+      21: 'such a doge. Very',
+      26: 'a prolific',
+      46: 'a generous',
+      72: 'a passionate',
+      85: 'a loving',
+      99: 'a charitable',
+      140: 'a veritable',
+      184: 'a unselfish',
+      238: 'a magnanimous',
+      287: 'a kindhearted',
+      325: 'a thoughtful',
+      419: 'a altruistic',
+      465: 'a hospitable',
+      490: 'a more than generous'
+    };
+    return getPhrase(factor, titles, 'out of this world. He\'s a terrific');
   }
 
-  function getPrefix (count, stars) {
-    if (count < 2) { return 'just'; }
-    if (count < 5) { return 'a measly'; }
-    if (count < 8) { return 'a fair'; }
-    if (count < 13) { return 'a reported'; }
-    if (count < 18) { return 'a playful'; }
-    if (count < 24) { return 'a generous'; }
-    if (count < 45) { return 'close to'; }
-    if (count < 61) { return 'an insane'; }
-    if (count < 73) { return 'an thrilling'; }
-    if (count < 90) { return 'a dramatic'; }
-    if (count < 112) { return 'over a hundred repos! Exactly'; }
-    if (count < 131) { return 'a tremendous'; }
-    if (count < 144) { return 'a flabbergasting'; }
-    if (count < 150) { return 'an insane'; }
-    if (count < 180) { return 'an impressive'; }
-    if (count < 191) { return 'a monumental'; }
-    if (count < 200) { return 'an splendid'; }
-    return 'many, many repositories. To be exact, he has';
+  function getRank (factor) {
+    var ranks = {
+      2: 'neophyte',
+      3: 'explorer',
+      5: 'developer',
+      8: 'practitioner',
+      11: 'sailor',
+      14: 'adept',
+      17: 'adventurer',
+      24: 'aficionado',
+      28: 'warrior',
+      31: 'expert',
+      34: 'legend',
+      37: 'doge',
+      40: 'master',
+      43: 'elder',
+      47: 'ninja',
+      53: 'soldier',
+      60: 'samurai',
+      65: 'extraordinaire',
+      71: 'flipboarder',
+      76: 'extremist',
+      82: 'heavyweight',
+      88: 'champion',
+      95: 'globetrotter',
+      102: 'grandmaster',
+      110: 'machine',
+      119: 'legend',
+      131: 'supercomputer',
+      147: 'martian',
+      162: 'hotshot',
+      175: 'blackbelt',
+      187: 'octocat',
+      200: 'superstar'
+    };
+    return getPhrase(factor, ranks, 'god');
+  }
+
+  function getRepoPrefix (factor) {
+    return getPrefix(factor, 'repos');
+  }
+
+  function getPrefix (factor, thing) {
+    var prefixes = {
+      0: 'not even one, exactly',
+      2: 'just',
+      5: 'a measly',
+      8: 'a fair',
+      13: 'a reported',
+      18: 'a playful',
+      24: 'a generous',
+      45: 'close to',
+      61: 'an insane',
+      73: 'an thrilling',
+      90: 'a dramatic',
+      112: $.format('over a hundred%s! Exactly', thing ? ' ' + thing : ''),
+      131: 'a tremendous',
+      144: 'a flabbergasting',
+      150: 'an insane',
+      180: 'an impressive',
+      191: 'a monumental',
+      200: 'an splendid',
+      500: 'an incredible',
+      800: 'an unreasonable',
+      1000: 'a delirious',
+      2000: 'a fantastic',
+      4000: 'a dogetastic',
+      6000: 'a boat filled with',
+      8000: 'a hilarious'
+    };
+    var defaultPhrase = $.format('many, many %s: ', thing ? thing : 'of them');
+    return getPhrase(factor, prefixes, defaultPhrase);
   }
 
   function getReposByLanguages (data) {
@@ -295,8 +323,15 @@
     username.focus();
   }
 
+// TODO aggregate and sort events, talk about events a bit.
+
   // $.get('https://api.github.com/zen', { responseType: 'text', headers: { Accept: 'application/vnd.github.v3+json' } }, wrap(function (res) {
   //   $('.gh-quote').txt(res);
   // }));
   $('.gh-quote').txt('Keep it logically awesome.');
-}(suchjs);
+
+  root.api = {
+    getPrefix: getPrefix,
+    ks: ks
+  };
+}(suchjs, this);
