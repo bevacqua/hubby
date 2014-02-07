@@ -2,16 +2,17 @@
   var username = $('.hy-username');
   var usernameVal = $('.ve-username');
 
-  function validate (e) {
+  function validate (e, state) {
     var validation = /[a-z0-9_-]+/i;
 
     if (e) { e.preventDefault(); }
 
+    usernameVal.classList.remove('ve-show');
+
     var input = username.val();
     if (input.match(validation)) {
-      usernameVal.classList.remove('ve-show');
-      fetch(input);
-    } else {
+      fetch(input, state);
+    } else if (!state) {
       invalid(input);
     }
   }
@@ -121,12 +122,16 @@
   function fetch (username) {
     set('last.username', username, false);
 
+    if (history && history.pushState) {
+      history.pushState({ username: username }, username + ' on Hubalyzer', '?' + username);
+    }
+
     var cache = get('data.' + username, { generated: false });
     if (cache.generated && new Date() - cache.generated < 600000) {
       reveal(cache); // fresh for 10m
       return;
     }
-
+    console.info('Fetching user data from GitHub...');
     $.async.parallel({
       user: getUser, repos: getRepos, events: getEvents
     }, processing);
@@ -384,11 +389,10 @@
   }
 
   function reveal (data) {
-    console.info('We got a hacker over here!');
-    console.info('You can play with your data, it\'s accessible in window.data');
+    console.info('You can play with your data now, it\'s accessible in window.data');
     console.info(data);
     console.table(data.most.starred, 'name homepage stargazers_count forks_count open_issues'.split(' '));
-    window.data = data;
+    root.data = data;
     $('.oh-header').html(tmpl('oh_header', data));
     $('.ot-sidebar').html(tmpl('ot_sidebar', data));
     $('.ot-description').html(tmpl('ot_description', data));
@@ -396,11 +400,15 @@
     document.body.classList.add('hy-reveal');
   }
 
-  function again () {
+  function again (e, state) {
     document.body.classList.remove('hy-reveal');
     rm('last.username');
-    username.val('');
+    username.val(state ? state.username : '');
     username.focus();
+
+    if (!state && history && history.pushState) {
+      history.pushState({ username: '' }, 'Hubalyzer draws pretty things based on public GitHub profiles', 'hubalyzer.html');
+    }
   }
 
   function search () {
@@ -444,8 +452,15 @@
       ks: ks
     };
 
+    console.info('We got a hacker over here!');
     console.info('Well, hello! Have you visited http://blog.ponyfoo.com yet?');
 
+    root.onpopstate = function (e) {
+      if (e && e.state) {
+        again(null, e.state);
+        validate(null, e.state);
+      }
+    };
     preload();
   }
 
