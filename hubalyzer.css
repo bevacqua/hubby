@@ -51,8 +51,10 @@ body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px
 .ot-repo-icon { vertical-align: top;  margin-right: 4px; }
 .ot-repo-info { display: inline-block; text-align: left }
 .repo-name { font-weight: bold; color: #4183c4; text-decoration: none; }
+.repo-name.ot-truncate { display: inline-block; }
 .repo-name:hover { text-decoration: underline; }
-.repo-description { display: block; width: 180px; color: #aaa; font-size: 13px; }
+.repo-description { display: block; color: #aaa; font-size: 13px; }
+.repo-description, .repo-name.ot-truncate { width: 180px; }
 .ot-truncate { overflow: hidden; text-overflow: ellipsis; vertical-align: top; white-space: nowrap; }
 .ot-stars-and-forks { display: inline-block; vertical-align: top; margin-left: 4px; text-align: right; width: 60px; }
 .ot-stars { margin-bottom: 3px; }
@@ -60,7 +62,9 @@ body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px
 .ot-most-starred .ot-forks, .ot-most-forked .ot-stars { font-size: 12px; color: #ddd; }
 .ot-description { margin-top: 20px; }
 .ot-description-summary { font-style: italic; }
-.ot-desc-p { margin-bottom: 20px; }
+.ot-desc-p, .ot-desc-commits { margin-bottom: 20px; }
+.ot-desc-commit { list-style-position: inside; list-style-type: circle; margin-bottom: 16px; }
+.ft-big { font-size: 20px; }
 
 @media only screen and (min-width: 1024px) {
   body { max-width: 1015px; margin: 0 auto; }
@@ -74,5 +78,6 @@ body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px
   .ot-main { display: inline-block; margin-left: 110px; }
   .ot-description { margin-top: inherit; }
   .ot-description, .ot-graphics { margin-right: 315px; max-width: 700px; }
-  .repo-description { width: 200px; }
+  .repo-description, .repo-name.ot-truncate { width: 200px; }
+  .ot-desc-commit { margin-bottom: 12px; }
 }

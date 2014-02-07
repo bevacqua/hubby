@@ -52,11 +52,13 @@
       if (tracked !== false) {
         var track = get('track', {});
         track[key] = +new Date();
-        localStorage.setItem('track', track);
+        set('track', track, false);
       }
       localStorage.setItem(key, JSON.stringify(value));
     } catch (e) {
-      decay();
+      if (decay()) {
+        set.apply(null, arguments);
+      }
     }
   }
 
@@ -70,7 +72,11 @@
 
   function rm (key) {
     try {
+      var track = get('track', {});
+      track.splice(track.indexOf(key), 1);
       localStorage.removeItem(key);
+      set('track', track, false);
+      return Object.keys(track).length;
     } catch (e) {
       // swallow
     }
@@ -90,6 +96,24 @@
   function subtract (a, b) { return b - a; }
   function subtractOn (thing) {
     return function (a, b) { return thing[b] - thing[a]; }
+  }
+  function rnd () { return Math.random() - 0.5; }
+
+  function flatten (a) {
+    return Array.prototype.concat.apply([], a);
+  }
+
+  function aggregate (things, on) {
+    var r = {};
+    things.forEach(function (thing) {
+      var prop = thing[on];
+      if (!r[prop]) {
+        r[prop] = [thing];
+      } else {
+        r[prop].push(thing);
+      }
+    });
+    return r;
   }
 
   function pluck (a, crumbs) {
@@ -128,13 +152,13 @@
 
     var cache = get('data.' + username, { generated: false });
     if (cache.generated && new Date() - cache.generated < 600000) {
-      reveal(cache); // fresh for 10m
+      processing(cache); // fresh for 10m
       return;
     }
     console.info('Fetching user data from GitHub...');
     $.async.parallel({
       user: getUser, repos: getRepos, events: getEvents
-    }, processing);
+    }, insertion);
 
     function query (endpoint, done) {
       var base = 'https://api.github.com';
@@ -174,13 +198,23 @@
     }
   }
 
-  function processing (err, input) {
+  function insertion (err, input) {
+    if (err) { // sanity
+      return;
+    }
+    input.generated = +new Date();
+    set('data.' + input.user.login, input);
+    processing(input);
+  }
+
+  function processing (input) {
     var data = { forks: 0, stars: 0, created: [], forked: [] };
     var s = 'stargazers_count';
     var f = 'forks_count';
 
     data.events = input.events;
     data.user = input.user;
+    data.reposByName = {};
     data.repos = input.repos || [];
     data.repos.forEach(function (repo) {
       if (repo.fork) {
@@ -190,6 +224,7 @@
       }
       data.stars += repo[s];
       data.forks += repo[f];
+      data.reposByName[repo.full_name] = repo;
     });
     data.most = {
       starred: data.repos.filter(starred).sort(starsort).slice(0, 15),
@@ -204,26 +239,35 @@
     data.kgists = ks(data.user.public_gists);
     data.kforked = ks(data.forked.length);
     data.kfollowing = ks(data.user.following);
-    data.generated = +new Date();
 
     var pushEvents = where(data.events, { type: 'PushEvent' });
-    var pushCommits = pluck(pushEvents, 'payload.commits.length').reduce(sum);
     var pushRepos = pluck(pushEvents, 'repo.name');
     var pushCounts = count(pushRepos);
     var pushRepoTop = Object.keys(pushCounts).sort(subtractOn(pushCounts));
+    var commitsByRepo = aggregate(pushEvents.map(commitsByRepoMapper), 'repo');
+    var commitMessages = flatten(Object.keys(commitsByRepo).map(commit)).sort(rnd);
 
     data.eventTypes = count(pluck(data.events, 'type'));
     data.eventFrame = dates(pluck(data.events, 'created_at'));
     data.eventPushes = {
+      all: pushEvents,
       repoCount: pushCounts,
       repoTop: pushRepoTop,
-      commits: pushCommits,
+      commits: commitMessages.length,
+      messages: commitMessages
     };
-
-    set('data.' + data.user.login, data);
 
     reveal(data);
 
+    function commitsByRepoMapper (pe) {
+      return { repo: pe.repo.name, commits: pe.payload.commits };
+    }
+    function commit (k) {
+      return flatten(pluck(commitsByRepo[k], 'commits')).map(repo(k));
+    }
+    function repo (k) {
+      return function (commit) { if (commit) { commit.repo = k; } return commit; };
+    }
     function starred (r) { return r[s]; }
     function starsort (a, b) { return b[s] - a[s]; }
     function forked (r) { return r[f]; }
@@ -438,12 +482,25 @@
     }
   }
 
+  function quote () {
+    var element = $('.gh-quote');
+    var key = 'gh.quote';
+    var cache = get(key, { generated: false });
+    if (cache.generated && new Date() - cache.generated < 600000) {
+      element.txt(cache.value); // fresh for 10m
+      return;
+    }
+
+    console.info('Fetching quote from GitHub...');
+
+    $.get('https://api.github.com/zen', { responseType: 'text', headers: { Accept: 'application/vnd.github.v3+json' } }, wrap(function (res) {
+      set(key, { generated: +new Date(), value: res });
+      element.txt(res);
+    }));
+  }
+
   function begin () {
 
-    // $.get('https://api.github.com/zen', { responseType: 'text', headers: { Accept: 'application/vnd.github.v3+json' } }, wrap(function (res) {
-    //   $('.gh-quote').txt(res);
-    // }));
-    $('.gh-quote').txt('Keep it logically awesome.');
     $('.hy-hubalyze').on('click', validate);
     $('.hy-again').on('click', again);
 
@@ -462,6 +519,7 @@
       }
     };
     preload();
+    quote();
   }
 
   begin();
