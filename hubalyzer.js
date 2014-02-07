@@ -49,7 +49,7 @@
 
   function set (key, value, tracked) {
     try {
-      if (tracked) {
+      if (tracked !== false) {
         var track = get('track', {});
         track[key] = +new Date();
         localStorage.setItem('track', track);
@@ -116,7 +116,7 @@
   }
 
   function dates (a) {
-    return a.map(function (d) { return moment(d); }).sort(subtract);
+    return a.map(function (d) { return moment(d); }).sort(function (a, b) { return a - b; });
   }
 
   function fetch (username) {

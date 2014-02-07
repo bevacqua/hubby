@@ -2,6 +2,9 @@
 button { cursor: pointer; }
 body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px; overflow-x: hidden; }
 @font-face { font-family: 'octicons'; src: url('octicons.woff') format('woff'); }
+::selection { background: #e92c6c; color: #fcfcfc; text-shadow: 0 1px rgb(0, 0, 0, .2); }
+::-webkit-selection { background: #e92c6c; color: #fcfcfc; text-shadow: 0 1px rgb(0, 0, 0, .2); }
+::-moz-selection { background: #e92c6c; color: #fcfcfc; text-shadow: 0 1px rgb(0, 0, 0, .2); }
 .octicon { font: normal normal 16px octicons; line-height: 1; display: inline-block; text-decoration: none; -webkit-font-smoothing: antialiased; }
 .octicon-repo:before { content: '\f001'; }
 .octicon-star:before { content: '\f02a'; }
