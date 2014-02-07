@@ -62,8 +62,9 @@ body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px
 .ot-most-starred .ot-forks, .ot-most-forked .ot-stars { font-size: 12px; color: #ddd; }
 .ot-description { margin-top: 20px; }
 .ot-description-summary { font-style: italic; }
-.ot-desc-p, .ot-desc-commits { margin-bottom: 20px; }
+.ot-desc-p { margin-bottom: 25px; }
 .ot-desc-commit { list-style-position: inside; list-style-type: circle; margin-bottom: 16px; }
+.ft-big:not(:first-child) { margin-top: 40px; }
 .ft-big { font-size: 20px; }
 
 @media only screen and (min-width: 1024px) {

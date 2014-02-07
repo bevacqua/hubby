@@ -305,10 +305,12 @@
     });
   }
 
-  function getPhrase (factor, things, defaultPhrase) {
+  function getPhrase (factor, things, defaultPhrase, after) {
     for (var key in things) {
       if (factor < parseInt(key, 10)) {
-        return things[key];
+        return after && things[key].indexOf(' ') !== -1 ?
+          things[key].replace(/.*\s+/, '') :
+          things[key].replace(/(,|ly)$/, '');
       }
     }
     return defaultPhrase;
@@ -336,11 +338,37 @@
       238: 'a magnanimous',
       287: 'a kindhearted',
       325: 'a thoughtful',
-      419: 'a altruistic',
+      419: 'an altruistic',
       465: 'a hospitable',
       490: 'a more than generous'
     };
     return getPhrase(factor, titles, 'out of this world. He\'s a terrific');
+  }
+
+  function getQuantity (factor, after) {
+    var quants = {
+      3: 'a desperate',
+      5: 'a worrying',
+      10: 'a questionable',
+      15: 'barely',
+      20: 'a decent',
+      30: 'a reasonable',
+      46: 'a generous',
+      72: 'a passionate',
+      85: 'a loving',
+      99: 'a charitable',
+      140: 'a veritable',
+      184: 'an unbelieveable',
+      238: 'a magnanimous',
+      287: 'a kindhearted',
+      325: 'a thoughtful',
+      419: 'an altruistic',
+      430: 'a wonderful',
+      465: 'a hospitable',
+      476: 'a magnificent',
+      490: 'a very generous'
+    };
+    return getPhrase(factor, quants, 'an unbelieveable', after);
   }
 
   function getRank (factor) {
@@ -385,20 +413,20 @@
     return getPrefix(factor, 'repos');
   }
 
-  function getPrefix (factor, thing) {
+  function getPrefix (factor, thing, after) {
     var prefixes = {
-      1: 'exactly',
-      2: 'just',
+      1: 'a shameless',
+      2: 'mere',
       5: 'a measly',
       8: 'a fair',
       13: 'a reported',
       18: 'a playful',
       24: 'a generous',
-      45: 'close to',
+      45: 'quite decent',
       61: 'an insane',
       73: 'an thrilling',
       90: 'a dramatic',
-      112: $.format('over a hundred%s! Exactly', thing ? ' ' + thing : ''),
+      112: 'a ton,',
       131: 'a tremendous',
       144: 'a flabbergasting',
       150: 'an insane',
@@ -414,7 +442,7 @@
       8000: 'a hilarious'
     };
     var defaultPhrase = $.format('many, many %s: ', thing ? thing : 'of them');
-    return getPhrase(factor, prefixes, defaultPhrase);
+    return getPhrase(factor, prefixes, defaultPhrase, after);
   }
 
   function getReposByLanguages (data) {
@@ -506,6 +534,7 @@
 
     root.api = {
       getPrefix: getPrefix,
+      getQuantity: getQuantity,
       ks: ks
     };
 
