@@ -56,7 +56,8 @@ body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px
 .ot-stars, .ot-forks { font-size: 16px; }
 .ot-most-starred .ot-forks, .ot-most-forked .ot-stars { font-size: 12px; color: #ddd; }
 .ot-description { margin-top: 20px; }
-.ot-description-summary { font-style: italic; margin-bottom: 20px }
+.ot-description-summary { font-style: italic; }
+.ot-desc-p { margin-bottom: 20px; }
 
 @media only screen and (min-width: 1024px) {
   body { max-width: 1015px; margin: 0 auto; }

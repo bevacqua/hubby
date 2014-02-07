@@ -1,5 +1,5 @@
 // core
-!function (window, document) {
+~function (window, document) {
   var $ = document.querySelector.bind(document);
 
   $.atoa = function (a) { return Array.prototype.slice.call(a); }
@@ -15,7 +15,7 @@
 }(window, document);
 
 // dom
-!function ($, Node) {
+~function ($, Node) {
     Node.prototype.on = Node.prototype.addEventListener;
     Node.prototype.remove = function () { this.parentNode.removeChild(this); };
     Node.prototype.txt = function (v) { if (v === void 0) { return this.innerText; } this.innerText = v; }
@@ -25,7 +25,7 @@
 }(suchjs, Node);
 
 // async
-!function ($) {
+~function ($) {
   $.async = {
     waterfall: function (steps, done) {
       function next () {
@@ -77,7 +77,7 @@
 }(suchjs);
 
 // ajax
-!function ($, XMLHttpRequest) {
+~function ($, XMLHttpRequest) {
   $.ajax = function (url, options, done) {
     var method = options.method.toUpperCase();
     var xhr = new XMLHttpRequest();

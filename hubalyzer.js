@@ -1,18 +1,11 @@
-!function ($, root) {
+~function ($, root) {
   var username = $('.hy-username');
   var usernameVal = $('.ve-username');
-  var validation = /[a-z0-9_-]+/i;
-
-  $('.hy-hubalyze').on('click', validate);
-  $('.hy-again').on('click', again);
-
-  if (!username.val()) {
-    username.val(localStorage.getItem('last.username'));
-    username.focus();
-  }
 
   function validate (e) {
-    e.preventDefault();
+    var validation = /[a-z0-9_-]+/i;
+
+    if (e) { e.preventDefault(); }
 
     var input = username.val();
     if (input.match(validation)) {
@@ -53,9 +46,82 @@
     };
   }
 
+  function set (key, value, tracked) {
+    try {
+      if (tracked) {
+        var track = get('track', {});
+        track[key] = +new Date();
+        localStorage.setItem('track', track);
+      }
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      decay();
+    }
+  }
+
+  function get (key, defaultValue) {
+    try {
+      return JSON.parse(localStorage.getItem(key)) || defaultValue;
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+
+  function rm (key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      // swallow
+    }
+  }
+
+  function decay () {
+    try { // decompress localStorage a bit in case of riots
+      var track = get('track', {});
+      var keys = Object.keys(track).sort(subtract);
+      rm(keys[0]);
+    } catch (e) {
+      // swallow
+    }
+  }
+
+  function sum (a, b) { return a + b; }
+  function subtract (a, b) { return b - a; }
+  function subtractOn (thing) {
+    return function (a, b) { return thing[b] - thing[a]; }
+  }
+
+  function pluck (a, crumbs) {
+    var props = crumbs.split('.');
+    var prop = props.shift();
+    var plucked = a.map(function (a) { return a[prop]; });
+    if (props.length) {
+      return pluck(plucked, props.join('.'));
+    }
+    return plucked;
+  }
+
+  function where (a, matches) {
+    var of = Object.keys(matches);
+    return a.filter(function (a) {
+      return of.every(function (prop) { return a[prop] === matches[prop]; });
+    });
+  }
+
+  function count (what) {
+    var r = {};
+    what.forEach(function (k) { r[k] = (r[k] || 0) + 1; });
+    return r;
+  }
+
+  function dates (a) {
+    return a.map(function (d) { return moment(d); }).sort(subtract);
+  }
+
   function fetch (username) {
-    var cacheJson = localStorage.getItem('data.' + username) || '{"generated":false}';
-    var cache = JSON.parse(cacheJson);
+    set('last.username', username, false);
+
+    var cache = get('data.' + username, { generated: false });
     if (cache.generated && new Date() - cache.generated < 600000) {
       reveal(cache); // fresh for 10m
       return;
@@ -135,8 +201,21 @@
     data.kfollowing = ks(data.user.following);
     data.generated = +new Date();
 
-    localStorage.setItem('data.' + data.user.login, JSON.stringify(data));
-    localStorage.setItem('last.username', data.user.login);
+    var pushEvents = where(data.events, { type: 'PushEvent' });
+    var pushCommits = pluck(pushEvents, 'payload.commits.length').reduce(sum);
+    var pushRepos = pluck(pushEvents, 'repo.name');
+    var pushCounts = count(pushRepos);
+    var pushRepoTop = Object.keys(pushCounts).sort(subtractOn(pushCounts));
+
+    data.eventTypes = count(pluck(data.events, 'type'));
+    data.eventFrame = dates(pluck(data.events, 'created_at'));
+    data.eventPushes = {
+      repoCount: pushCounts,
+      repoTop: pushRepoTop,
+      commits: pushCommits,
+    };
+
+    set('data.' + data.user.login, data);
 
     reveal(data);
 
@@ -259,7 +338,7 @@
 
   function getPrefix (factor, thing) {
     var prefixes = {
-      0: 'not even one, exactly',
+      1: 'exactly',
       2: 'just',
       5: 'a measly',
       8: 'a fair',
@@ -306,9 +385,9 @@
 
   function reveal (data) {
     console.info('We got a hacker over here!');
-    console.table(data.most.starred, 'name homepage stargazers_count forks_count open_issues'.split(' '));
-    console.info('You can play with the data, it\'s accessible in window.data');
+    console.info('You can play with your data, it\'s accessible in window.data');
     console.info(data);
+    console.table(data.most.starred, 'name homepage stargazers_count forks_count open_issues'.split(' '));
     window.data = data;
     $('.oh-header').html(tmpl('oh_header', data));
     $('.ot-sidebar').html(tmpl('ot_sidebar', data));
@@ -319,19 +398,56 @@
 
   function again () {
     document.body.classList.remove('hy-reveal');
+    rm('last.username');
     username.val('');
     username.focus();
   }
 
-// TODO aggregate and sort events, talk about events a bit.
+  function search () {
+    var s = location.search, r;
+    if (s[0] === '?') {
+      s = s.split('').splice(1).join('').split('&');
+      s.forEach(function (kv) {
+        var kvp = kv.split('=');
+        if (kvp.length === 1) {
+          r = kvp[0];
+        } else if (kvp[0] === 'username') {
+          r = kvp[1];
+        }
+      });
+    }
+    return r;
+  }
 
-  // $.get('https://api.github.com/zen', { responseType: 'text', headers: { Accept: 'application/vnd.github.v3+json' } }, wrap(function (res) {
-  //   $('.gh-quote').txt(res);
-  // }));
-  $('.gh-quote').txt('Keep it logically awesome.');
+  function preload () {
+    var initial = search() || get('last.username');
+    if (initial) {
+      username.val(initial);
+      validate();
+    } else {
+      username.val('');
+      username.focus();
+    }
+  }
 
-  root.api = {
-    getPrefix: getPrefix,
-    ks: ks
-  };
+  function begin () {
+
+    // $.get('https://api.github.com/zen', { responseType: 'text', headers: { Accept: 'application/vnd.github.v3+json' } }, wrap(function (res) {
+    //   $('.gh-quote').txt(res);
+    // }));
+    $('.gh-quote').txt('Keep it logically awesome.');
+    $('.hy-hubalyze').on('click', validate);
+    $('.hy-again').on('click', again);
+
+    root.api = {
+      getPrefix: getPrefix,
+      ks: ks
+    };
+
+    console.info('Well, hello! Have you visited http://blog.ponyfoo.com yet?');
+
+    preload();
+  }
+
+  begin();
 }(suchjs, this);
