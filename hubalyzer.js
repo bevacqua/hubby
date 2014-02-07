@@ -56,8 +56,8 @@
   function fetch (username) {
     var cacheJson = localStorage.getItem('data.' + username) || '{"generated":false}';
     var cache = JSON.parse(cacheJson);
-    if (cache.generated && new Date() - cache.generated < 6000000) {
-      reveal(cache); // fresh for 10m TODO remove a 0
+    if (cache.generated && new Date() - cache.generated < 600000) {
+      reveal(cache); // fresh for 10m
       return;
     }
 
