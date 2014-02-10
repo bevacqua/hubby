@@ -14,7 +14,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "server": "static -p 3000"
+    "server": "static -p 3002"
   },
   "dependencies": {
     "node-static": "~0.7.3"
