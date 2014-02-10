@@ -29,8 +29,10 @@ body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px
 .ve-show { display: block; }
 .hy-reveal .st-input { display:  none; }
 .hy-reveal .st-output { opacity: 1; }
-.hy-again { margin: 0 auto; padding-bottom: 7px; color: #333; background: none; font-size: 18px; display: block; clear: both; }
-.hy-again:hover { border-bottom: 5px solid; }
+.hy-footer { margin: 0 auto; padding-bottom: 7px; clear: both; text-align: center; margin-top: 20px; }
+.hy-footer-button { display: block; }
+.hy-button-text { color: #333; font-size: 18px; background: none; display: inline-block; text-decoration: none; border-bottom: 5px solid transparent; margin: 20px auto; }
+.hy-button-text:hover { border-bottom-color: inherit; }
 .oh-name { color: #333; text-decoration: none; font-size: 30px; line-height: 40px; vertical-align: top; }
 .oh-name-heading { margin-bottom: 4px; }
 .oh-name-login { color: #bbb; }
@@ -81,4 +83,6 @@ body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px
   .ot-description, .ot-graphics { margin-right: 315px; max-width: 700px; }
   .repo-description, .repo-name.ot-truncate { width: 200px; }
   .ot-desc-commit { margin-bottom: 12px; }
+  .hy-footer-button { display: inline-block; }
+  .hy-button-text { margin-right: 20px; }
 }
