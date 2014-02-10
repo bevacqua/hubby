@@ -479,7 +479,7 @@
     username.focus();
 
     if (!state && history && history.pushState) {
-      history.pushState({ username: '' }, 'Hubby is a lowly attempt to describe public GitHub activity in natural language', 'hubby.html');
+      history.pushState({ username: '' }, 'Hubby is a lowly attempt to describe public GitHub activity in natural language', '?');
     }
   }
 
