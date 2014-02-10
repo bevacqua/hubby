@@ -147,7 +147,7 @@
     set('last.username', username, false);
 
     if (history && history.pushState) {
-      history.pushState({ username: username }, username + ' on Hubalyzer', '?' + username);
+      history.pushState({ username: username }, username + ' on Hubby', '?' + username);
     }
 
     var cache = get('data.' + username, { generated: false });
@@ -479,7 +479,7 @@
     username.focus();
 
     if (!state && history && history.pushState) {
-      history.pushState({ username: '' }, 'Hubalyzer draws pretty things based on public GitHub profiles', 'hubalyzer.html');
+      history.pushState({ username: '' }, 'Hubby is a lowly attempt to describe public GitHub activity in natural language', 'hubby.html');
     }
   }
 

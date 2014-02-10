@@ -1,7 +1,7 @@
 {
-  "name": "hubalyzer",
-  "description": "Hubalyzer draws pretty things based on public GitHub profiles",
-  "homepage": "https://github.com/bevacqua/hubalyzer",
+  "name": "hubby",
+  "description": "Hubby is a lowly attempt to describe public GitHub activity in natural language",
+  "homepage": "https://github.com/bevacqua/hubby",
   "author": {
     "name": "Nicolas Bevacqua",
     "email": "ng@bevacqua.io",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/bevacqua/hubalyzer.git"
+    "url": "git://github.com/bevacqua/hubby.git"
   },
   "version": "1.0.0",
   "license": "MIT",
