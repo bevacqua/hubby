@@ -422,7 +422,7 @@
       13: 'a reported',
       18: 'a playful',
       24: 'a generous',
-      45: 'quite decent',
+      45: 'a quite decent',
       61: 'an insane',
       73: 'an thrilling',
       90: 'a dramatic',
