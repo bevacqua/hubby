@@ -63,7 +63,7 @@
   </a>
 </script>
 <script type='text/template' id='ot_description'>
-  {{ if (data.lang.length > 1) { }}}
+  {{ if (data.lang.length > 1) { }}
   <p class="ot-desc-p ot-description-summary ft-big">Judging from his public GitHub presence, {{= (user.name || user.login).split(' ')[0] }} is {{= lang[0].title }} {{= lang[0].language }} {{= lang[0].rank }}, and has {{= lang[0].prefix }} {{= lang[0].count }} repositories under his belt. {{= (user.name || user.login).split(' ')[0] }} is also {{= lang[1].title }} {{= lang[1].language }} {{= lang[1].rank }}.</p>
   {{ } else { }}
   <p class="ot-desc-p ot-description-summary ft-big">Judging from his public GitHub presence, {{= (user.name || user.login).split(' ')[0] }} is {{= lang[0].title }} {{= lang[0].language }} {{= lang[0].rank }}, and has {{= lang[0].prefix }} {{= lang[0].count }} repositories under his belt.</p>

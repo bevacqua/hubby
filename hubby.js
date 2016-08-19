@@ -465,7 +465,12 @@ var twemoji = require('twemoji');
   }
 
   function compile (template, data) {
-    return twemoji.parse(emojione.shortnameToUnicode(tmpl(template, data)));
+    var html = tmpl(template, data);
+    var unicoded = html.replace(/(:[a-z0-9_-]+:)/g, unicodify);
+    return unicoded;
+    function unicodify (all, marker) {
+      return emojione.shortnameToUnicode(marker);
+    }
   }
 
   function reveal (data) {
@@ -477,6 +482,7 @@ var twemoji = require('twemoji');
     $('.ot-sidebar').html(compile('ot_sidebar', data));
     $('.ot-description').html(compile('ot_description', data));
     $('.ot-repos').html(compile('ot_repos', data));
+    twemoji.parse(document.body);
     document.body.classList.add('hy-reveal');
   }
 
@@ -560,4 +566,4 @@ var twemoji = require('twemoji');
   }
 
   begin();
-}(suchjs, this);
+}(suchjs, window);
