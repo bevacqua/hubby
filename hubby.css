@@ -68,6 +68,7 @@ body { font-family: Helvetica, arial, freesans, clean, sans-serif; padding: 20px
 .ot-desc-commit { list-style-position: inside; list-style-type: circle; margin-bottom: 16px; }
 .ft-big:not(:first-child) { margin-top: 40px; }
 .ft-big { font-size: 20px; }
+.emoji { height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em; }
 
 @media only screen and (min-width: 1024px) {
   body { max-width: 1015px; margin: 0 auto; }

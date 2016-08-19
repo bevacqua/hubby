@@ -14,9 +14,16 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "server": "static -p 3002"
+    "start": "watchify hubby.js -o dist/hubby.js & static -p 3002",
+    "build": "browserify hubby.js -o dist/hubby.js"
   },
   "dependencies": {
-    "node-static": "~0.7.3"
+    "emojione": "2.2.6",
+    "node-static": "~0.7.3",
+    "twemoji": "2.1.0"
+  },
+  "devDependencies": {
+    "browserify": "13.1.0",
+    "watchify": "3.7.0"
   }
 }

@@ -1,3 +1,6 @@
+var emojione = require('emojione');
+var twemoji = require('twemoji');
+
 ~function ($, root) {
   var username = $('.hy-username');
   var usernameVal = $('.ve-username');
@@ -36,6 +39,7 @@
         if (res && res.documentation_url) {
           xhrdocumentation.attr('href', res.documentation_url);
           xhrdocumentation.txt(res.documentation_url);
+          xhrdocumentation.html(xhrdocumentation.html() + twemoji.parse(' 😡'));
           xhrdocumentation.classList.add('ve-show');
         } else {
           xhrdocumentation.attr('href', null);
@@ -460,15 +464,19 @@
     return repos;
   }
 
+  function compile (template, data) {
+    return twemoji.parse(emojione.shortnameToUnicode(tmpl(template, data)));
+  }
+
   function reveal (data) {
     console.info('You can play with your data now, it\'s accessible in window.data');
     console.info(data);
     console.table(data.most.starred, 'name homepage stargazers_count forks_count open_issues'.split(' '));
     root.data = data;
-    $('.oh-header').html(tmpl('oh_header', data));
-    $('.ot-sidebar').html(tmpl('ot_sidebar', data));
-    $('.ot-description').html(tmpl('ot_description', data));
-    $('.ot-repos').html(tmpl('ot_repos', data));
+    $('.oh-header').html(compile('oh_header', data));
+    $('.ot-sidebar').html(compile('ot_sidebar', data));
+    $('.ot-description').html(compile('ot_description', data));
+    $('.ot-repos').html(compile('ot_repos', data));
     document.body.classList.add('hy-reveal');
   }
 
@@ -539,7 +547,7 @@
     };
 
     console.info('We got a hacker over here!');
-    console.info('Well, hello! Have you visited http://blog.ponyfoo.com yet?');
+    console.info('Well, hello! Have you visited https://ponyfoo.com yet?');
 
     root.onpopstate = function (e) {
       if (e && e.state) {
