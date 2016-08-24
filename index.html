@@ -79,7 +79,7 @@
     <li class="ot-desc-commit"><a href="https://github.com/{{= data.eventPushes.messages[i].repo }}/commits/{{= data.eventPushes.messages[i].sha }}" class="repo-name" target="_blank" title="Check it out on GitHub">{{= data.eventPushes.messages[i].sha.substr(0, 10) }}:</a> {{= data.eventPushes.messages[i].message }}</li>
   {{ } }}
   </ul>
-  <p class="ot-desc-p ft-big">They also created {{= data.eventTypes.CreateEvent || 'no' }} things. They starred {{= data.eventTypes.WatchEvent || 'no' }} repos, and forked {{= data.eventTypes.ForkEvent || 'no' }} repos, in that same period.</p>
+  <p class="ot-desc-p ft-big">They also created {{= data.eventTypes.CreateEvent || 'no' }} things, starred {{= data.eventTypes.WatchEvent || 'no' }} repos, and forked {{= data.eventTypes.ForkEvent || 'no' }} repos.</p>
   <p class="ot-desc-p">Regarding collaboration, they have dealt with {{= data.eventTypes.IssuesEvent }} issues, and interacted {{= data.eventTypes.PullRequestEvent }} times on pull requests. They made {{= data.eventTypes.IssueCommentEvent }} comments, as well.</p>
 </script>
 <script type='text/template' id='ot_repos'>
