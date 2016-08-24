@@ -323,7 +323,7 @@ var twemoji = require('twemoji');
   function getTitle (factor) {
     var titles = {
       2: 'a',
-      3: 'alive. He writes anecdotal',
+      3: 'alive. They write anecdotal',
       4: 'a quiet',
       5: 'a learning',
       6: 'a reasonable',
@@ -346,7 +346,7 @@ var twemoji = require('twemoji');
       465: 'a hospitable',
       490: 'a more than generous'
     };
-    return getPhrase(factor, titles, 'out of this world. He\'s a terrific');
+    return getPhrase(factor, titles, 'out of this world. They\'re a terrific');
   }
 
   function getQuantity (factor, after) {
